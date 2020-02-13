@@ -92,6 +92,16 @@ By default, balenaSound bluetooth will connect using Secure Simple Pairing mode.
 
 **Note**: Legacy Mode is no longer allowed on [iOS](https://developer.apple.com/accessories/Accessory-Design-Guidelines.pdf) devices.
 
+### GPIO bluetooth control
+
+balenaSound allows you to control your mobile over bluetooth (Volume up/down) and enable bluetooth discovery. This feature is at default enabled, but can be disabled via setting the `DISABLE_BLUETOOTH_CONTROL` enviroment variable to `true`. You will have to connect some buttons to your GPIO pins to make use of this feature. We are using these pins:
+
+![GPIO Pins](images/gpio-pins.png)
+
+GPIO17= Volume up
+GPIO27= Bluetooth discovery
+GPIO22= Volume down
+
 ### Bluetooth scripts
 
 balenaSound has configurable scripts you can run on connect and disconnect bluetooth events. If you would like to activate this, set the  `BLUETOOTH_SCRIPTS` environment variable to `true`.
