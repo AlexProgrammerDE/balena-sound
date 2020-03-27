@@ -7,6 +7,10 @@ BLUETOOTH_GPIO=$(</usr/src/bluetooth_gpio)
 
 VOLUME_DOWN_GPIO=$(</usr/src/volume_down_gpio)
 
+NEXT_GPIO=$(</usr/src/next_gpio)
+
+PREVIOUS_GPIO=$(</usr/src/previous_gpio)
+
 TIMER="0"
 
 BLUETOOTH_DISCOVERABLE="0"
@@ -32,11 +36,28 @@ if [[ ! -d /sys/class/gpio/gpio$VOLUME_DOWN_GPIO ]]; then
 fi
 echo "in" > /sys/class/gpio/gpio$VOLUME_DOWN_GPIO/direction
 
+# Set up next
+if [[ ! -d /sys/class/gpio/gpio$NEXT_GPIO ]]; then
+  echo "$NEXT_GPIO" > /sys/class/gpio/export
+  sleep 1 
+fi
+echo "in" > /sys/class/gpio/gpio$NEXT_GPIO/direction
+
+# Set up previous
+if [[ ! -d /sys/class/gpio/gpio$PREVIOUS_GPIO ]]; then
+  echo "$PREVIOUS_GPIO" > /sys/class/gpio/export
+  sleep 1 
+fi
+echo "in" > /sys/class/gpio/gpio$PREVIOUS_GPIO/direction
+
 while : ; do
 
 if [ -a /var/cache/bluetooth/reconnect_device ]; then
 
+# Get the alsa name of the connected device
 DEVICE="$(echo "$(amixer -D bluealsa scontrols)" | sed -n " s,[^']*'\([^']*\).*,\1,p ")"
+
+# Get and parse the MAC Adress of the connected device
 MAC="$(cat /var/cache/bluetooth/reconnect_device)"
 MAC_PARSED="$(echo ${MAC//:/_})"
 # PLAYER_ADDRESS="$(echo "$(dbus-send --system --dest=org.bluez --print-reply /org/bluez/hci0/dev_$MAC_PARSED org.freedesktop.DBus.Properties.Get string:org.bluez.MediaControl1 string:Player)" | cut -d'"' -f 2)"
@@ -92,6 +113,20 @@ fi
 if [[ "$(cat /sys/class/gpio/gpio$VOLUME_DOWN_GPIO/value)" == 1 ]]; then
   printf "Setting volume lower. \n"
   amixer -D bluealsa sset "$DEVICE" 10%-
+  sleep 0.5
+fi
+
+# Next track
+if [[ "$(cat /sys/class/gpio/gpio$NEXT_GPIO/value)" == 1 ]]; then
+  printf "Playing the next track. \n"
+  dbus-send --system --dest=org.bluez --print-reply /org/bluez/hci0/dev_$MAC_PARSED/player0 org.bluez.MediaPlayer1.Next
+  sleep 0.5
+fi
+
+# Previous track
+if [[ "$(cat /sys/class/gpio/gpio$PREVIOUS_GPIO/value)" == 1 ]]; then
+  printf "Playing the previous track. \n"
+  dbus-send --system --dest=org.bluez --print-reply /org/bluez/hci0/dev_$MAC_PARSED/player0 org.bluez.MediaPlayer1.Previous
   sleep 0.5
 fi
 
