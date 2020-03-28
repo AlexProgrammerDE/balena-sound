@@ -55,7 +55,7 @@ else
 fi
 
 if [[ ! -z "$DISABLE_AUTO_DISCOVERY" ]]; then
-  hciconfig hci0 down
+  printf "discoverable off\npairable off\nexit\n" | bluetoothctl > /dev/null
 fi
 
 # Reconnect if there is a known device
