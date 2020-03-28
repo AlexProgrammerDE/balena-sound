@@ -52,16 +52,6 @@ echo "in" > /sys/class/gpio/gpio$PREVIOUS_GPIO/direction
 
 while : ; do
 
-if [ -a /var/cache/bluetooth/reconnect_device ]; then
-
-# Get the alsa name of the connected device
-DEVICE="$(echo "$(amixer -D bluealsa scontrols)" | sed -n " s,[^']*'\([^']*\).*,\1,p ")"
-
-# Get and parse the MAC Adress of the connected device
-MAC="$(cat /var/cache/bluetooth/reconnect_device)"
-MAC_PARSED="$(echo ${MAC//:/_})"
-# PLAYER_ADDRESS="$(echo "$(dbus-send --system --dest=org.bluez --print-reply /org/bluez/hci0/dev_$MAC_PARSED org.freedesktop.DBus.Properties.Get string:org.bluez.MediaControl1 string:Player)" | cut -d'"' -f 2)"
-
 while [[ "$(cat /sys/class/gpio/gpio$BLUETOOTH_GPIO/value)" == 1 ]]; do
   if [[ "$TIMER" < 3 ]]; then
     TIMER=$((TIMER+1))
@@ -79,6 +69,16 @@ if [[ "$TIMER" == 3 ]]; then
     printf "The device is already discoverable. \n"
   fi
 fi
+
+if [ -a /var/cache/bluetooth/reconnect_device ]; then
+
+# Get the alsa name of the connected device
+DEVICE="$(echo "$(amixer -D bluealsa scontrols)" | sed -n " s,[^']*'\([^']*\).*,\1,p ")"
+
+# Get and parse the MAC Adress of the connected device
+MAC="$(cat /var/cache/bluetooth/reconnect_device)"
+MAC_PARSED="$(echo ${MAC//:/_})"
+# PLAYER_ADDRESS="$(echo "$(dbus-send --system --dest=org.bluez --print-reply /org/bluez/hci0/dev_$MAC_PARSED org.freedesktop.DBus.Properties.Get string:org.bluez.MediaControl1 string:Player)" | cut -d'"' -f 2)"
 
 if [[ ! -z "$(echo "$(amixer -D bluealsa scontrols)" | sed -n " s,[^']*'\([^']*\).*,\1,p ")" ]]; then
 
