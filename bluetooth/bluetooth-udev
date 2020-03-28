@@ -12,7 +12,7 @@ SYSTEM_OUTPUT_VOLUME=$(</usr/src/system_output_volume)
 
 case "$action" in
 add)
-    printf "discoverable off\npairable off\nexit\n" | bluetoothctl
+    printf "discoverable off\npairable off\nexit\n" | bluetoothctl > /dev/null
     echo $NAME | tr -d '"' > /var/cache/bluetooth/reconnect_device  # Save the mac address of the last connected device (for reconnect after reboot)
     mplayer -volume $CONNECTION_NOTIFY_VOLUME /usr/src/sounds/connect.mp3 -really-quiet > /dev/null 2>&1
     amixer sset PCM,0 $SYSTEM_OUTPUT_VOLUME% > /dev/null &
@@ -23,13 +23,13 @@ add)
     if [[ -a /usr/src/close_discovery ]]; then
       if [[ -a /usr/src/is_discoverable ]]; then
         printf "Closing bluetooth discovery. \n"
-        hciconfig hci0 down
+        printf "discoverable off\npairable off\nexit\n" | bluetoothctl > /dev/null
       fi
     fi
     ;;
 remove)
     mplayer -volume $CONNECTION_NOTIFY_VOLUME /usr/src/sounds/disconnect.mp3 -really-quiet > /dev/null 2>&1
-    printf "discoverable on\npairable on\nexit\n" | bluetoothctl
+    printf "discoverable off\npairable off\nexit\n" | bluetoothctl
     amixer sset PCM,0 $SYSTEM_OUTPUT_VOLUME% > /dev/null &
     amixer sset Digital,0 $SYSTEM_OUTPUT_VOLUME% > /dev/null &
 	if [[ -z "$BLUETOOTH_SCRIPTS" ]]; then
