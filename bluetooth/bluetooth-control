@@ -72,9 +72,9 @@ done
 if [[ "$TIMER" == 3 ]]; then
   if [[ ! -a /usr/src/is_discoverable ]]; then
     printf "Making the device for 3 min discoverable. \n"
-    hciconfig hci0 up
+    printf "discoverable on\npairable on\nexit\n"
     touch /usr/src/is_discoverable
-    (sleep 180 ; printf "Closing bluetooth discovery. \n" ; hciconfig hci0 down ; rm /usr/src/is_discoverable) &
+    (sleep 180 ; printf "Closing bluetooth discovery. \n" ; printf "discoverable off\npairable off\nexit\n" | bluetoothctl > /dev/null ; rm /usr/src/is_discoverable) &
   else
     printf "The device is already discoverable. \n"
   fi
