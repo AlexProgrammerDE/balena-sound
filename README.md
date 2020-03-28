@@ -105,12 +105,14 @@ balenaSound allows you to control your mobile over bluetooth (Volume up/down and
 * GPIO17= Volume up
 * GPIO27= Bluetooth discovery and play/pause/resume music 
 * GPIO22= Volume down
+* GPIO10= Next track
+* GPIO9= Previous track
 
-If you don´t like these gpio pins you can set others manually with `VOLUME_UP_GPIO` `VOLUME_DOWN_GPIO` or/and `BLUETOOTH_GPIO` to another gpio. The value should be something like `17` or `27`(The number should be the one of the gpio and not of the pin!).
+If you don´t like these gpio pins you can set others manually with `VOLUME_UP_GPIO`, `VOLUME_DOWN_GPIO`, `NEXT_GPIO`, `PREVIOUS_GPIO` or/and `BLUETOOTH_GPIO` to another gpio. The value should be something like `17` or `27`(The number should be the one of the gpio and not of the pin!).
 
-#### What happens if the button gets pressed?
+#### What happens if a button gets pressed?
 
-If you press the volume up/down button the balenaSound device will send (If a phone is connected.) a command to the connected device device, which turns the output volume of the phone higher/lower. The bluetooth button is a little bit more complex. You can press or hold it. There is a integrated timer which counts how long the bluetooth button is pressed. If it is pressed the timer is set to `1`. It waits one secound and if it you keep holding it it is set to `2`. Then it waits again one secound and if it is until then keeped pressed the value is set to `3`. `3` is the maximum and it waits until you release the button. Here is what happens:
+If you press the volume up/down button the balenaSound device will send (If a phone is connected.) a command to the connected device device, which turns the output volume of the phone higher/lower. If you press the next/previous button the balenaSound device will play the next/previous track (If a phone is connected.). The bluetooth button is a little bit more complex. You can press or hold it. There is a integrated timer which counts how long the bluetooth button is pressed. If it is pressed the timer is set to `1`. It waits one secound and if it you keep holding it it is set to `2`. Then it waits again one secound and if it is until then keeped pressed the value is set to `3`. `3` is the maximum and it waits until you release the button. Here is what happens:
 
 * **1:** The music gets played/paused/resumed
 * **2:** The music gets played/paused/resumed
