@@ -27,13 +27,20 @@ add)
     fi
     ;;
 remove)
+<<<<<<< HEAD:bluetooth/bluetooth-udev
     printf "discoverable off\npairable off\nexit\n" | bluetoothctl
 	
+=======
+>>>>>>> a5269e93dac3b49b46eed714c7ca97786ac205fc:bluetooth-audio/bluetooth-udev
     amixer sset PCM,0 $CONNECTION_NOTIFY_VOLUME% > /dev/null &
     amixer sset Digital,0 $CONNECTION_NOTIFY_VOLUME% > /dev/null &
 
     aplay -D hw:0,0 /usr/src/sounds/disconnect.wav > /dev/null 2>&1
     
+<<<<<<< HEAD:bluetooth/bluetooth-udev
+=======
+    printf "discoverable on\npairable on\nexit\n" | bluetoothctl
+>>>>>>> a5269e93dac3b49b46eed714c7ca97786ac205fc:bluetooth-audio/bluetooth-udev
     amixer sset PCM,0 $SYSTEM_OUTPUT_VOLUME% > /dev/null &
     amixer sset Digital,0 $SYSTEM_OUTPUT_VOLUME% > /dev/null &
     if [[ -z "$BLUETOOTH_SCRIPTS" ]]; then
