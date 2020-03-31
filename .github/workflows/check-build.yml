@@ -24,7 +24,8 @@ jobs:
 
     - name: Install the all needed things
       run: |
-        npm install balena-cli -g
+        sudo apt install npm
+        sudo npm install balena-cli -g
         sudo apt install docker
         
     - name: Try to deploy on Raspberry Pi 3
