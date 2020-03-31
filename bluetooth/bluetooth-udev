@@ -8,14 +8,17 @@ if [[ ! $name =~ ^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$ ]]; then exit 0; fi
 action=$(expr "$ACTION" : "\([a-zA-Z]\+\).*")
 
 CONNECTION_NOTIFY_VOLUME=$(</usr/src/connection_notify_volume)
-
 SYSTEM_OUTPUT_VOLUME=$(</usr/src/system_output_volume)
 
 case "$action" in
 add)
     printf "discoverable off\npairable off\nexit\n" | bluetoothctl > /dev/null
     echo $NAME | tr -d '"' > /var/cache/bluetooth/reconnect_device  # Save the mac address of the last connected device (for reconnect after reboot)
+<<<<<<< HEAD:bluetooth/bluetooth-udev
     
+=======
+
+>>>>>>> 852984c0bab94ce83459326afb42a30a51b3186a:bluetooth-audio/bluetooth-udev
     amixer sset PCM,0 $CONNECTION_NOTIFY_VOLUME% > /dev/null &
     amixer sset Digital,0 $CONNECTION_NOTIFY_VOLUME% > /dev/null &
     
@@ -31,8 +34,14 @@ remove)
     amixer sset PCM,0 $CONNECTION_NOTIFY_VOLUME% > /dev/null &
     amixer sset Digital,0 $CONNECTION_NOTIFY_VOLUME% > /dev/null &
 
+<<<<<<< HEAD:bluetooth/bluetooth-udev
     aplay -D hw:0,0 /usr/src/sounds/disconnect.wav > /dev/null 2>&1    
     
+=======
+    aplay -D hw:0,0 /usr/src/sounds/disconnect.wav > /dev/null 2>&1
+    
+    printf "discoverable on\npairable on\nexit\n" | bluetoothctl
+>>>>>>> 852984c0bab94ce83459326afb42a30a51b3186a:bluetooth-audio/bluetooth-udev
     amixer sset PCM,0 $SYSTEM_OUTPUT_VOLUME% > /dev/null &
     amixer sset Digital,0 $SYSTEM_OUTPUT_VOLUME% > /dev/null &
     if [[ -z "$BLUETOOTH_SCRIPTS" ]]; then
